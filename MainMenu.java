@@ -19,8 +19,8 @@ public class MainMenu extends JFrame {
         JButton btnCalculadora = new JButton("Calculadora");
         JButton btnSalir = new JButton("Salir");
 
-        btnTriqui.addActionListener(e -> new TriquiGame());
-        btnAhorcado.addActionListener(e -> new AhorcadoGame());
+        btnTriqui.addActionListener(e -> new JuegoTriqui());
+        btnAhorcado.addActionListener(e -> new JuegoAhorcado());
         btnMemoria.addActionListener(e -> new MemoriaGame());
         btnCalculadora.addActionListener(e -> new CalculadoraGame());
         btnSalir.addActionListener(e -> System.exit(0));
