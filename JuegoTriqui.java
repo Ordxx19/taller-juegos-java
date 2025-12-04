@@ -1,98 +1,94 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
-public class JuegoTriqui extends JFrame {
+public class Triqui extends JFrame {
+    private JButton[][] board;
+    private boolean turnX = true;
+    private JButton resetBtn;
 
-    private JButton[][] botones = new JButton[3][3];
-    private boolean turnoX = true; // true = X, false = O
-
-    public JuegoTriqui() {
+    public Triqui() {
         setTitle("Triqui");
-        setSize(300, 300);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setSize(350, 420);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setLayout(new BorderLayout());
 
-        setLayout(new GridLayout(3, 3));
-
-        inicializarTablero();
-    }
-
-    private void inicializarTablero() {
+        JPanel grid = new JPanel();
+        grid.setLayout(new GridLayout(3, 3));
+        board = new JButton[3][3];
 
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 3; j++) {
+                JButton btn = new JButton();
+                btn.setFont(new Font("Arial", Font.BOLD, 40));
+                int x = i;
+                int y = j;
 
-                botones[i][j] = new JButton("");
-                botones[i][j].setFont(new Font("Arial", Font.BOLD, 40));
-
-                int fila = i;
-                int columna = j;
-
-                botones[i][j].addActionListener(new ActionListener() {
-                    @Override
+                btn.addActionListener(new ActionListener() {
                     public void actionPerformed(ActionEvent e) {
-
-                        if (botones[fila][columna].getText().equals("")) {
-                            botones[fila][columna].setText(turnoX ? "X" : "O");
-                            turnoX = !turnoX;
-
-                            
-                            String ganador = verificarGanador();
-                            if (ganador != null) {
-                                JOptionPane.showMessageDialog(null,
-                                        "Ganó: " + ganador + " (pendiente reiniciar el tablero)");
-                            }
+                        if (btn.getText().equals("")) {
+                            btn.setText(turnX ? "X" : "O");
+                            turnX = !turnX;
+                            checkWinner();
                         }
                     }
                 });
 
-                add(botones[i][j]);
+                board[i][j] = btn;
+                grid.add(btn);
             }
+        }
+
+        resetBtn = new JButton("Reiniciar partida");
+        resetBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                resetGame();
+            }
+        });
+
+        add(grid, BorderLayout.CENTER);
+        add(resetBtn, BorderLayout.SOUTH);
+        setVisible(true);
+    }
+
+    private void resetGame() {
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j < 3; j++) {
+                board[i][j].setText("");
+            }
+        }
+        turnX = true;
+    }
+
+    private void checkWinner() {
+        for (int i = 0; i < 3; i++) {
+            if (!board[i][0].getText().equals("") && 
+                board[i][0].getText().equals(board[i][1].getText()) &&
+                board[i][1].getText().equals(board[i][2].getText())) {
+                announceWinner(board[i][0].getText());
+            }
+            if (!board[0][i].getText().equals("") && 
+                board[0][i].getText().equals(board[1][i].getText()) &&
+                board[1][i].getText().equals(board[2][i].getText())) {
+                announceWinner(board[0][i].getText());
+            }
+        }
+
+        if (!board[0][0].getText().equals("") &&
+            board[0][0].getText().equals(board[1][1].getText()) &&
+            board[1][1].getText().equals(board[2][2].getText())) {
+            announceWinner(board[0][0].getText());
+        }
+
+        if (!board[0][2].getText().equals("") &&
+            board[0][2].getText().equals(board[1][1].getText()) &&
+            board[1][1].getText().equals(board[2][0].getText())) {
+            announceWinner(board[0][2].getText());
         }
     }
 
-   
-    private String verificarGanador() {
-
-        // Revisar filas
-        for (int i = 0; i < 3; i++) {
-            if (!botones[i][0].getText().equals("") &&
-                botones[i][0].getText().equals(botones[i][1].getText()) &&
-                botones[i][1].getText().equals(botones[i][2].getText())) {
-
-                return botones[i][0].getText();
-            }
-        }
-
-      
-        for (int j = 0; j < 3; j++) {
-            if (!botones[0][j].getText().equals("") &&
-                botones[0][j].getText().equals(botones[1][j].getText()) &&
-                botones[1][j].getText().equals(botones[2][j].getText())) {
-
-                return botones[0][j].getText();
-            }
-        }
-
- 
-        if (!botones[0][0].getText().equals("") &&
-            botones[0][0].getText().equals(botones[1][1].getText()) &&
-            botones[1][1].getText().equals(botones[2][2].getText())) {
-
-            return botones[0][0].getText();
-        }
-
-        
-        if (!botones[0][2].getText().equals("") &&
-            botones[0][2].getText().equals(botones[1][1].getText()) &&
-            botones[1][1].getText().equals(botones[2][0].getText())) {
-
-            return botones[0][2].getText();
-        }
-
-  
-        return null;
+    private void announceWinner(String player) {
+        JOptionPane.showMessageDialog(this, "Ganó " + player);
+        resetGame();
     }
 }
