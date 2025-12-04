@@ -2,7 +2,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class Triqui extends JFrame {
+public class JuegoTriqui extends JFrame {
     private JButton[][] board;
     private boolean turnX = true;
     private JButton resetBtn;
