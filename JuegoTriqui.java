@@ -7,7 +7,7 @@ public class JuegoTriqui extends JFrame {
     private boolean turnX = true;
     private JButton resetBtn;
 
-    public Triqui() {
+    public JuegoTriqui() {
         setTitle("Triqui");
         setSize(350, 420);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
