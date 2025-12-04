@@ -5,47 +5,31 @@ import java.awt.event.*;
 public class MainMenu extends JFrame {
 
     public MainMenu() {
-        setTitle("Menu Principal");
-        setSize(300, 300);
+        setTitle("Menú Principal");
+        setSize(300, 400);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 1));
+        panel.setLayout(new GridLayout(5, 1, 10, 10));
 
-        JButton triquiBtn = new JButton("Jugar Triqui");
-        JButton parejasBtn = new JButton("Jugar Parejas");
-        JButton ahorcadoBtn = new JButton("Jugar Ahorcado");
-        JButton calculadoraBtn = new JButton("Calculadora");
+        JButton btnTriqui = new JButton("Triqui");
+        JButton btnAhorcado = new JButton("Ahorcado");
+        JButton btnMemoria = new JButton("Memoria");
+        JButton btnCalculadora = new JButton("Calculadora");
+        JButton btnSalir = new JButton("Salir");
 
-        panel.add(triquiBtn);
-        panel.add(parejasBtn);
-        panel.add(ahorcadoBtn);
-        panel.add(calculadoraBtn);
+        btnTriqui.addActionListener(e -> new TriquiGame());
+        btnAhorcado.addActionListener(e -> new AhorcadoGame());
+        btnMemoria.addActionListener(e -> new MemoriaGame());
+        btnCalculadora.addActionListener(e -> new CalculadoraGame());
+        btnSalir.addActionListener(e -> System.exit(0));
 
-        triquiBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                new TriquiGame();
-            }
-        });
-
-        parejasBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Juego en desarrollo");
-            }
-        });
-
-        ahorcadoBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Juego en desarrollo");
-            }
-        });
-
-        calculadoraBtn.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                JOptionPane.showMessageDialog(null, "Juego en desarrollo");
-            }
-        });
+        panel.add(btnTriqui);
+        panel.add(btnAhorcado);
+        panel.add(btnMemoria);
+        panel.add(btnCalculadora);
+        panel.add(btnSalir);
 
         add(panel);
         setVisible(true);
@@ -55,3 +39,4 @@ public class MainMenu extends JFrame {
         new MainMenu();
     }
 }
+
