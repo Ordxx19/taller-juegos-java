@@ -1,58 +1,96 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
+import java.util.*;
 
-public class JuegoAhorcado extends JFrame {
+public class HangmanGame extends JFrame {
 
-    private String palabraSecreta = "JAVA"; // Luego la cambiamos
-    private String palabraOculta = "____";   // Incompleto a propósito
-    private int intentos = 6;
+    private String[] wordList = {"JAVA", "PROGRAMA", "AHORCADO", "VENTANA", "CLASE"};
+    private String word;
+    private char[] display;
+    private int attemptsLeft;
+    private java.util.List<Character> usedLetters;
 
-    private JLabel lblPalabra;
-    private JLabel lblIntentos;
-    private JTextField txtLetra;
-    private JButton btnProbar;
+    private JLabel wordLabel;
+    private JLabel attemptsLabel;
+    private JLabel usedLabel;
+    private JTextField inputField;
+    private JButton guessButton;
+    private JButton backButton;
 
-    public JuegoAhorcado() {
+    public HangmanGame() {
         setTitle("Ahorcado");
-        setSize(400, 200);
+        setSize(400, 300);
+        setLayout(new GridLayout(6, 1));
         setLocationRelativeTo(null);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        setLayout(new GridLayout(4, 1));
+        word = wordList[new Random().nextInt(wordList.length)];
+        display = new char[word.length()];
+        Arrays.fill(display, '_');
+        attemptsLeft = 6;
+        usedLetters = new ArrayList<>();
 
-        lblPalabra = new JLabel("Palabra: " + palabraOculta, SwingConstants.CENTER);
-        lblPalabra.setFont(new Font("Arial", Font.BOLD, 22));
+        wordLabel = new JLabel(String.valueOf(display), SwingConstants.CENTER);
+        attemptsLabel = new JLabel("Intentos restantes: " + attemptsLeft, SwingConstants.CENTER);
+        usedLabel = new JLabel("Letras usadas: ", SwingConstants.CENTER);
 
-        lblIntentos = new JLabel("Intentos restantes: " + intentos, SwingConstants.CENTER);
+        inputField = new JTextField();
+        guessButton = new JButton("Probar letra");
+        backButton = new JButton("Volver al menú");
 
-        txtLetra = new JTextField();
-        btnProbar = new JButton("Probar letra");
+        add(wordLabel);
+        add(attemptsLabel);
+        add(usedLabel);
+        add(inputField);
+        add(guessButton);
+        add(backButton);
 
-        add(lblPalabra);
-        add(lblIntentos);
-        add(txtLetra);
-        add(btnProbar);
-
-        // Acción aún incompleta
-        btnProbar.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                String letra = txtLetra.getText().toUpperCase();
-
-                if (letra.length() == 1) {
-                    // SOLO QUITAMOS INTENTOS – falta lógica
-                    intentos--;
-                    lblIntentos.setText("Intentos restantes: " + intentos);
-
-                    // Falta: actualizar palabraOculta
-                    // Falta: detectar derrota
-                    // Falta: detectar victoria
-                }
-
-                txtLetra.setText("");
-            }
+        guessButton.addActionListener(e -> guess());
+        backButton.addActionListener(e -> {
+            new MainMenu().setVisible(true);
+            dispose();
         });
+    }
+
+    private void guess() {
+        String text = inputField.getText().toUpperCase();
+        if (text.length() != 1) {
+            inputField.setText("");
+            return;
+        }
+
+        char letter = text.charAt(0);
+        inputField.setText("");
+
+        if (usedLetters.contains(letter)) return;
+
+        usedLetters.add(letter);
+        usedLabel.setText("Letras usadas: " + usedLetters.toString());
+
+        if (word.indexOf(letter) >= 0) {
+            for (int i = 0; i < word.length(); i++) {
+                if (word.charAt(i) == letter) {
+                    display[i] = letter;
+                }
+            }
+            wordLabel.setText(String.valueOf(display));
+
+            if (String.valueOf(display).equals(word)) {
+                JOptionPane.showMessageDialog(this, "GANASTE");
+                dispose();
+                new MainMenu().setVisible(true);
+            }
+
+        } else {
+            attemptsLeft--;
+            attemptsLabel.setText("Intentos restantes: " + attemptsLeft);
+
+            if (attemptsLeft == 0) {
+                JOptionPane.showMessageDialog(this, "PERDISTE. La palabra era: " + word);
+                dispose();
+                new MainMenu().setVisible(true);
+            }
+        }
     }
 }
