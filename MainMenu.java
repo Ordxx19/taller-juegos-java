@@ -1,41 +1,57 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 public class MainMenu extends JFrame {
 
     public MainMenu() {
-        setTitle("Taller de Juegos");
-        setSize(400, 300);
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setTitle("Menu Principal");
+        setSize(300, 300);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         JPanel panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 1, 10, 10));
+        panel.setLayout(new GridLayout(4, 1));
 
-        JButton btnTriqui = new JButton("Jugar Triqui");
-        JButton btnParejas = new JButton("Jugar Parejas");
-        JButton btnAhorcado = new JButton("Jugar Ahorcado");
-        JButton btnCalculadora = new JButton("Calculadora");
+        JButton triquiBtn = new JButton("Jugar Triqui");
+        JButton parejasBtn = new JButton("Jugar Parejas");
+        JButton ahorcadoBtn = new JButton("Jugar Ahorcado");
+        JButton calculadoraBtn = new JButton("Calculadora");
 
-        panel.add(btnTriqui);
-        panel.add(btnParejas);
-        panel.add(btnAhorcado);
-        panel.add(btnCalculadora);
+        panel.add(triquiBtn);
+        panel.add(parejasBtn);
+        panel.add(ahorcadoBtn);
+        panel.add(calculadoraBtn);
 
-        add(panel);
-
-        // Acción de botón incompleta (a propósito)
-        btnTriqui.addActionListener(new ActionListener() {
-            @Override
+        triquiBtn.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                new JuegoTriqui().setVisible(true);
+                new TriquiGame();
             }
         });
+
+        parejasBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Juego en desarrollo");
+            }
+        });
+
+        ahorcadoBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Juego en desarrollo");
+            }
+        });
+
+        calculadoraBtn.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                JOptionPane.showMessageDialog(null, "Juego en desarrollo");
+            }
+        });
+
+        add(panel);
+        setVisible(true);
     }
 
     public static void main(String[] args) {
-        new MainMenu().setVisible(true);
+        new MainMenu();
     }
 }
