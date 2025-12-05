@@ -64,7 +64,7 @@ public class CalculadoraGame extends JFrame {
                     case "+": resultado = num1 + num2; break;
                     case "-": resultado = num1 - num2; break;
                     case "*": resultado = num1 * num2; break;
-                    case "/": 
+                    case "/":
                         if (num2 != 0) resultado = num1 / num2;
                         else {
                             display.setText("Error");
@@ -78,15 +78,12 @@ public class CalculadoraGame extends JFrame {
                 return;
             }
 
-            if (cmd.matches("[+\-*/]")) {
+            if (cmd.matches("[+\\-*/]")) {
                 num1 = Double.parseDouble(display.getText());
                 operador = cmd;
                 display.setText("");
             }
         }
     }
-
-    public static void main(String[] args) {
-        new CalculadoraGame();
-    }
 }
+
