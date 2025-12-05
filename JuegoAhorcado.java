@@ -1,110 +1,74 @@
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashSet;
-import java.util.Set;
 
-public class HangmanGame extends JFrame {
-    private String[] words = {"JAVA", "AHORCADO", "PROGRAMAR", "CLASE", "OBJETO"};
-    private String currentWord;
-    private Set<Character> guessedLetters;
-    private int lives;
+public class AhorcadoGame extends JFrame {
+    private String[] palabras = {"JAVA", "CODIGO", "MENU", "AHORCADO"};
+    private String palabra;
+    private char[] progreso;
+    private int errores = 0;
 
-    private JLabel wordLabel;
-    private JLabel livesLabel;
-    private JTextField inputField;
-    private JButton guessButton;
-    private JButton restartButton;
+    private JLabel lblProgreso;
+    private JTextField txtLetra;
+    private JLabel lblErrores;
 
-    public HangmanGame() {
+    public AhorcadoGame() {
         setTitle("Ahorcado");
-        setSize(400, 300);
+        setSize(400, 200);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setLayout(new FlowLayout());
+        setLocationRelativeTo(null);
 
-        wordLabel = new JLabel();
-        livesLabel = new JLabel();
-        inputField = new JTextField(5);
-        guessButton = new JButton("Adivinar");
-        restartButton = new JButton("Reiniciar");
+        palabra = palabras[(int)(Math.random() * palabras.length)];
+        progreso = new char[palabra.length()];
+        for (int i = 0; i < progreso.length; i++) progreso[i] = '_';
 
-        add(wordLabel);
-        add(livesLabel);
-        add(new JLabel("Letra:"));
-        add(inputField);
-        add(guessButton);
-        add(restartButton);
+        lblProgreso = new JLabel(String.valueOf(progreso));
+        lblProgreso.setFont(new Font("Arial", Font.BOLD, 28));
+        lblProgreso.setHorizontalAlignment(SwingConstants.CENTER);
 
-        startGame();
+        lblErrores = new JLabel("Errores: 0/6");
+        lblErrores.setHorizontalAlignment(SwingConstants.CENTER);
 
-        guessButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                guessLetter();
-            }
-        });
+        txtLetra = new JTextField();
+        txtLetra.addActionListener(e -> intentar());
 
-        restartButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                startGame();
-            }
-        });
+        add(lblProgreso, BorderLayout.NORTH);
+        add(txtLetra, BorderLayout.CENTER);
+        add(lblErrores, BorderLayout.SOUTH);
+
+        setVisible(true);
     }
 
-    private void startGame() {
-        currentWord = words[(int)(Math.random() * words.length)];
-        guessedLetters = new HashSet<>();
-        lives = 6;
+    private void intentar() {
+        String entrada = txtLetra.getText().toUpperCase();
+        txtLetra.setText("");
 
-        updateLabels();
-    }
+        if (entrada.length() != 1) return;
 
-    private void guessLetter() {
-        String text = inputField.getText().toUpperCase();
-        if (text.length() != 1) return;
+        char letra = entrada.charAt(0);
+        boolean acierto = false;
 
-        char letter = text.charAt(0);
-        inputField.setText("");
-
-        if (!guessedLetters.contains(letter)) {
-            guessedLetters.add(letter);
-            if (!currentWord.contains(String.valueOf(letter))) {
-                lives--;
+        for (int i = 0; i < palabra.length(); i++) {
+            if (palabra.charAt(i) == letra) {
+                progreso[i] = letra;
+                acierto = true;
             }
         }
 
-        updateLabels();
-        checkGameState();
-    }
-
-    private void updateLabels() {
-        String display = "";
-
-        for (char c : currentWord.toCharArray()) {
-            if (guessedLetters.contains(c)) {
-                display += c + " ";
-            } else {
-                display += "_ ";
+        if (!acierto) {
+            errores++;
+            lblErrores.setText("Errores: " + errores + "/6");
+            if (errores == 6) {
+                JOptionPane.showMessageDialog(this, "Perdiste. La palabra era: " + palabra);
+                dispose();
             }
         }
 
-        wordLabel.setText("Palabra: " + display);
-        livesLabel.setText("Vidas: " + lives);
-    }
+        lblProgreso.setText(String.valueOf(progreso));
 
-    private void checkGameState() {
-        boolean won = true;
-        for (char c : currentWord.toCharArray()) {
-            if (!guessedLetters.contains(c)) {
-                won = false;
-                break;
-            }
-        }
-
-        if (won) {
-            JOptionPane.showMessageDialog(this, "¡Ganaste! La palabra era: " + currentWord);
-        } else if (lives <= 0) {
-            JOptionPane.showMessageDialog(this, "Perdiste :( La palabra era: " + currentWord);
+        if (String.valueOf(progreso).equals(palabra)) {
+            JOptionPane.showMessageDialog(this, "Ganaste");
+            dispose();
         }
     }
 }
-
