@@ -1,6 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
 
 public class MainMenu extends JFrame {
 
@@ -13,23 +12,23 @@ public class MainMenu extends JFrame {
         JPanel panel = new JPanel();
         panel.setLayout(new GridLayout(5, 1, 10, 10));
 
-        JButton btnTriqui = new JButton("Triqui");
-        JButton btnAhorcado = new JButton("Ahorcado");
-        JButton btnMemoria = new JButton("Memoria");
-        JButton btnCalculadora = new JButton("Calculadora");
+        JButton btnTriqui = new JButton("Jugar Triqui");
+        JButton btnAhorcado = new JButton("Jugar Ahorcado");
+        JButton btnMemoria = new JButton("Jugar Memoria");
+        JButton btnCalculadora = new JButton("Abrir Calculadora");
         JButton btnSalir = new JButton("Salir");
-
-        btnTriqui.addActionListener(e -> new JuegoTriqui());
-        btnAhorcado.addActionListener(e -> new JuegoAhorcado());
-        btnMemoria.addActionListener(e -> new MemoriaGame());
-        btnCalculadora.addActionListener(e -> new CalculadoraGame());
-        btnSalir.addActionListener(e -> System.exit(0));
 
         panel.add(btnTriqui);
         panel.add(btnAhorcado);
         panel.add(btnMemoria);
         panel.add(btnCalculadora);
         panel.add(btnSalir);
+
+        btnTriqui.addActionListener(e -> new JuegoTriqui());
+        btnAhorcado.addActionListener(e -> new AhorcadoGame());
+        btnMemoria.addActionListener(e -> new MemoriaGame());
+        btnCalculadora.addActionListener(e -> new CalculadoraGame());
+        btnSalir.addActionListener(e -> System.exit(0));
 
         add(panel);
         setVisible(true);
