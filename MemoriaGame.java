@@ -2,103 +2,73 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class MemoriaGame extends JFrame {
-    private JPanel panel;
-    private JButton[] cards;
-    private int[] values = new int[16];
-    private JButton firstCard = null;
-    private JButton secondCard = null;
-    private int matches = 0;
+public class AhorcadoGame extends JFrame {
+    private String[] palabras = {"JAVA", "CODIGO", "MENU", "AHORCADO"};
+    private String palabra;
+    private char[] progreso;
+    private int errores = 0;
 
-    public MemoriaGame() {
-        setTitle("Juego de Memoria");
-        setSize(400, 400);
+    private JLabel lblProgreso;
+    private JTextField txtLetra;
+    private JLabel lblErrores;
+
+    public AhorcadoGame() {
+        setTitle("Ahorcado");
+        setSize(400, 200);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
 
-        panel = new JPanel();
-        panel.setLayout(new GridLayout(4, 4));
+        palabra = palabras[(int)(Math.random() * palabras.length)];
+        progreso = new char[palabra.length()];
+        for (int i = 0; i < progreso.length; i++) progreso[i] = '_';
 
-        // asignar pares
-        int num = 1;
-        for (int i = 0; i < 16; i += 2) {
-            values[i] = num;
-            values[i + 1] = num;
-            num++;
-        }
+        lblProgreso = new JLabel(String.valueOf(progreso));
+        lblProgreso.setFont(new Font("Arial", Font.BOLD, 28));
+        lblProgreso.setHorizontalAlignment(SwingConstants.CENTER);
 
-        // mezclar
-        for (int i = 0; i < 16; i++) {
-            int j = (int)(Math.random() * 16);
-            int temp = values[i];
-            values[i] = values[j];
-            values[j] = temp;
-        }
+        lblErrores = new JLabel("Errores: 0/6");
+        lblErrores.setHorizontalAlignment(SwingConstants.CENTER);
 
-        cards = new JButton[16];
-        for (int i = 0; i < 16; i++) {
-            cards[i] = new JButton("?");
-            cards[i].setFont(new Font("Arial", Font.BOLD, 20));
-            cards[i].putClientProperty("index", i);
-            cards[i].addActionListener(new CardListener());
-            panel.add(cards[i]);
-        }
+        txtLetra = new JTextField();
+        txtLetra.addActionListener(e -> intentar());
 
-        add(panel);
+        add(lblProgreso, BorderLayout.NORTH);
+        add(txtLetra, BorderLayout.CENTER);
+        add(lblErrores, BorderLayout.SOUTH);
+
         setVisible(true);
     }
 
-    private class CardListener implements ActionListener {
-        public void actionPerformed(ActionEvent e) {
-            JButton clicked = (JButton) e.getSource();
-            int index = (int) clicked.getClientProperty("index");
+    private void intentar() {
+        String entrada = txtLetra.getText().toUpperCase();
+        txtLetra.setText("");
 
-            clicked.setText(String.valueOf(values[index]));
-            clicked.setEnabled(false);
+        if (entrada.length() != 1) return;
 
-            if (firstCard == null) {
-                firstCard = clicked;
-            } else if (secondCard == null) {
-                secondCard = clicked;
-                Timer timer = new Timer(600, new ActionListener() {
-                    public void actionPerformed(ActionEvent e) {
-                        verificar();
-                    }
-                });
-                timer.setRepeats(false);
-                timer.start();
+        char letra = entrada.charAt(0);
+        boolean acierto = false;
+
+        for (int i = 0; i < palabra.length(); i++) {
+            if (palabra.charAt(i) == letra) {
+                progreso[i] = letra;
+                acierto = true;
             }
         }
-    }
 
-    private void verificar() {
-        int idx1 = (int) firstCard.getClientProperty("index");
-        int idx2 = (int) secondCard.getClientProperty("index");
-
-        if (values[idx1] == values[idx2]) {
-            matches++;
-            if (matches == 8) {
-                JOptionPane.showMessageDialog(this, "¡Ganaste!");
+        if (!acierto) {
+            errores++;
+            lblErrores.setText("Errores: " + errores + "/6");
+            if (errores == 6) {
+                JOptionPane.showMessageDialog(this, "Perdiste. La palabra era: " + palabra);
+                dispose();
             }
-        } else {
-            firstCard.setText("?");
-            secondCard.setText("?");
-            firstCard.setEnabled(true);
-            secondCard.setEnabled(true);
         }
 
-        firstCard = null;
-        secondCard = null;
-    }
+        lblProgreso.setText(String.valueOf(progreso));
 
-    public static void main(String[] args) {
-        new MemoriaGame();
-    }
-}
+        if (String.valueOf(progreso).equals(palabra)) {
+            JOptionPane.showMessageDialog(this, "Ganaste");
+            dispose();
         }
-    }
-
-    public static void main(String[] args) {
-        new MemoriaGame();
     }
 }
